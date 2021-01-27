@@ -60,7 +60,8 @@ def add_profile(request):
     else:
         form = NewProfileForm()
     return render(request, 'new_profile.html', {"form": form})
-    @login_required(login_url='/accounts/login/')
+
+@login_required(login_url='/accounts/login/')
 def update_project(request):
     current_user = request.user
     profiles = Profile.get_profile()
@@ -180,6 +181,8 @@ class ProjectList(APIView):
             serializers.save()
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class ProjectDescription(APIView):
     permission_classes = (IsAdminOrReadOnly,)
