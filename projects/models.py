@@ -35,3 +35,55 @@ class Project(models.Model):
     project_image = models.ImageField(upload_to='projects/',null=True)
     description = models.TextField(null=True)
     project_link = models.TextField(null=True)
+    @classmethod
+    def get_projects(cls):
+        projects = Project.objects.all()
+        return projects
+
+    @classmethod
+    def find_project(cls,search_term):
+        project = Project.objects.filter(title__icontains=search_term)
+        return project
+
+    def design_rating(self):
+        all_designs =list( map(lambda x: x.design, self.reviews.all()))
+        return np.mean(all_designs)
+
+    def usability_rating(self):
+        all_usability =list( map(lambda x: x.usability, self.reviews.all()))
+        return np.mean(all_usability)
+
+    def content_rating(self):
+        all_content =list( map(lambda x: x.content, self.reviews.all()))
+        return np.mean(all_content)
+
+
+class Reviews(models.Model):
+    RATING_CHOICES = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+        (6, '6'),
+        (7, '7'),
+        (8, '8'),
+        (9, '9'),
+        (10, '10'),
+    )
+    juror = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE, related_name='reviews',null=True)
+    design = models.IntegerField(choices=RATING_CHOICES,default=0)
+    usability = models.IntegerField(choices=RATING_CHOICES,default=0)
+    content = models.IntegerField(choices=RATING_CHOICES,default=0)
+    comment = models.CharField(max_length=200,null=True)
+
+    @classmethod
+    def get_reviews(cls):
+        reviews = Reviews.objects.all()
+        return reviews
+
+    # @classmethod
+    # def get_average(cls):
+    #     usability =Reviews.objects.all().aggregate(Avg('usability'))
+    #     return usability
