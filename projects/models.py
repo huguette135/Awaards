@@ -35,6 +35,7 @@ class Project(models.Model):
     project_image = models.ImageField(upload_to='projects/',null=True)
     description = models.TextField(null=True)
     project_link = models.TextField(null=True)
+
     @classmethod
     def get_projects(cls):
         projects = Project.objects.all()
