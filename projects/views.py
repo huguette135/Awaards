@@ -63,6 +63,7 @@ def add_profile(request):
 
 @login_required(login_url='/accounts/login/')
 def update_project(request):
+    form= UploadForm()
     current_user = request.user
     profiles = Profile.get_profile()
     for profile in profiles:
@@ -77,7 +78,7 @@ def update_project(request):
                     return redirect('home')
             else:
                 form = UploadForm()
-            return render(request,'upload.html',{"user":current_user,"form":form})
+    return render(request,'upload.html',{"user":current_user,"form":form})
 
 @login_required(login_url='/accounts/login/')
 def add_review(request,pk):
